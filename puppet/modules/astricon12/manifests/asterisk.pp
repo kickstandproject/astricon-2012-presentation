@@ -28,9 +28,11 @@ class astricon12::asterisk(
     $polycom-provision_password = 'superSecret!'
     $puppet_server = 'puppet-01-test.polybeacon.lan'
     $ssh_options = {}
+    $dhcp_options = {
+        'tftp-server-name' => '"pbx-astricon12-test"',
+    }
 
     class { 'astricon12::asterisk::bootstrap': }
-
     class { 'astricon12::asterisk::phones': }
     class { 'astricon12::asterisk::trunks': }
 
@@ -82,6 +84,42 @@ class astricon12::asterisk::trunks {
 
 class astricon12::asterisk::phones {
     class { 'astricon12::asterisk::phones::testing': }
+
+    asterisk::function::sip::device::polycom::601 { '0004f230d181':
+        email       => 'paul.belanger@polybeacon.com',
+        extension   => '3001',
+        fullname    => 'Paul Belanger',
+        secret      => 'zuteV5vEd7US',
+    }
+
+    dhcp::function::host { '0004f230d181':
+        address => '00:04:f2:30:d1:81',
+        options => $dhcp_options,
+    }
+
+    asterisk::function::sip::device::polycom::601 { '0004f23aca66':
+        email       => 'russell@russellbryant.net',
+        extension   => '3002',
+        fullname    => 'Russell Bryant',
+        secret      => 'jaP7aCrAdr57',
+    }
+
+    dhcp::function::host { '0004f23aca66':
+        address => '00:04:f2:3a:ca:66',
+        options => $dhcp_options,
+    }
+
+    asterisk::function::sip::device::polycom::601 { '0004f239f062':
+        email       => 'leif@leifmadsen.com',
+        extension   => '3003',
+        fullname    => 'Leif Madsen',
+        secret      => 'BeT7ahaKeWuc',
+    }
+
+    dhcp::function::host { '0004f239f062':
+        address => '00:04:f2:39:f0:62',
+        options => $dhcp_options,
+    }
 }
 
 class astricon12::asterisk::phones::testing {
