@@ -1,0 +1,15 @@
+Source: astricon-2012-presentation
+Section: comm
+Priority: optional
+Maintainer: Paul Belanger <paul.belanger@polybeacon.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.9.3
+Homepage: https://github.com/kickstandproject
+Vcs-Git: git://github.com/kickstandproject/astricon-2012-presentation.git
+Vcs-Browser: https://github.com/kickstandproject/astricon-2012-presentation
+
+Package: asterisk-config-astricon2012
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Configuration files for Asterisk
+ An example of how to package your configuration files for Asterisk.
