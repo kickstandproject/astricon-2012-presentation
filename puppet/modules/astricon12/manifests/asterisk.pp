@@ -33,8 +33,8 @@ class astricon12::asterisk(
     }
 
     class { 'astricon12::asterisk::bootstrap': }
+    class { 'astricon12::asterisk::install' : }
     class { 'astricon12::asterisk::phones': }
-    class { 'astricon12::asterisk::trunks': }
 
     class { 'astricon12::general':
         environment     => $environment,
@@ -77,14 +77,21 @@ class astricon12::asterisk::bootstrap(
         key         => '6E14C2BE',
         url         => 'ppa.kickstand-project.org/asterisk-1.8/unstable/ubuntu',
     }
+
+    apt::function::repository { 'pabelanger-unstable':
+        components  => 'main',
+        key         => '6E14C2BE',
+        url         => 'ppa.kickstand-project.org/pabelanger/unstable/ubuntu',
+    }
 }
 
-class astricon12::asterisk::trunks {
+class astricon12::asterisk::install {
+    package { 'asterisk-config-astricon2012':
+        ensure => latest,
+    }
 }
 
 class astricon12::asterisk::phones {
-    class { 'astricon12::asterisk::phones::testing': }
-
     asterisk::function::sip::device::polycom::601 { '0004f230d181':
         email       => 'paul.belanger@polybeacon.com',
         extension   => '3001',
@@ -120,9 +127,6 @@ class astricon12::asterisk::phones {
         address => '00:04:f2:39:f0:62',
         options => $dhcp_options,
     }
-}
-
-class astricon12::asterisk::phones::testing {
 }
 
 # vim:sw=4:ts=4:expandtab:textwidth=79
