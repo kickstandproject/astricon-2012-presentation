@@ -64,6 +64,8 @@ class astricon12::asterisk(
 
     class { 'rsyslog::server': }
 
+    polycom-provision::function::site { $name: }
+
     polycom-provision::function::sip-basic { $name:
         address => $::fqdn,
     }
