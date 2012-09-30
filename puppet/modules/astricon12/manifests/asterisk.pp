@@ -1,7 +1,7 @@
 #
-# puppet-modules: The Kickstand Project
+# kickstandproject-astricon12: The Kickstand Project
 #
-# Copyright (C) 2012, Polybeacon, Inc.
+# Copyright (C) 2012, PolyBeacon, Inc.
 #
 # Paul Belanger <paul.belanger@polybeacon.com>
 #
@@ -16,110 +16,100 @@
 # file at the top of the source tree.
 #
 class astricon12::asterisk(
-    $environment = 'production'
+  $environment = 'production'
 ) {
-    $asterisk_sip = {}
-    $polycom-provision_password = 'superSecret!'
-    $puppet_server = 'puppet-01-test.polybeacon.lan'
-    $ssh_options = {}
-    $dhcp_options = {
-        'tftp-server-name' => '"pbx-astricon12-test"',
-    }
+  $polycom-provision_password = 'superSecret!'
+  $puppet_server = 'puppet-01-test.polybeacon.lan'
+  $dhcp_options = {
+    'tftp-server-name' => '"pbx-astricon12-test"',
+  }
 
-    class { 'astricon12::asterisk::bootstrap': }
-    class { 'astricon12::asterisk::install' : }
-    class { 'astricon12::asterisk::phones': }
+  class { 'astricon12::general':
+    environment     => $environment,
+    puppet_server   => $puppet_server,
+  }
 
-    class { 'astricon12::general':
-        environment     => $environment,
-        puppet_server   => $puppet_server,
-    }
+  class { 'astricon12::asterisk::bootstrap': }
+  class { 'astricon12::asterisk::install' : }
+  class { 'astricon12::asterisk::phones': }
+  class { 'network::client': }
+  class { 'ssh::server': }
+  class { 'rsyslog::server': }
+  class { 'asterisk::server': }
 
-    class { 'asterisk::server':
-        sip => $asterisk_sip,
-    }
+  class { 'polycom-provision::server':
+    password  => $polycom-provision_password,
+  }
 
-    class { 'polycom-provision::server':
-        password    => $polycom-provision_password,
-    }
+  class { 'dhcp::server':
+    interfaces  => $dhcp_interfaces,
+  }
 
-    class { 'dhcp::server':
-        interfaces  => $dhcp_interfaces,
-    }
+  polycom-provision::function::site { $name: }
 
-    class { 'network::client': }
-
-    class { 'ssh::server':
-        options => $ssh_options,
-    }
-
-    class { 'rsyslog::server': }
-
-    polycom-provision::function::site { $name: }
-
-    polycom-provision::function::sip-basic { $name:
-        address => $::fqdn,
-    }
+  polycom-provision::function::sip-basic { $name:
+    address => $::fqdn,
+  }
 }
 
 class astricon12::asterisk::bootstrap(
-    $stage = 'bootstrap'
+  $stage = 'bootstrap'
 ) {
-    apt::function::repository { 'asterisk-1.8-unstable':
-        components  => 'main',
-        key         => '6E14C2BE',
-        url         => 'ppa.kickstand-project.org/asterisk-1.8/unstable/ubuntu',
-    }
+  apt::function::repository { 'asterisk-1.8-unstable':
+    components  => 'main',
+    key         => '6E14C2BE',
+    url         => 'ppa.kickstand-project.org/asterisk-1.8/unstable/ubuntu',
+  }
 
-    apt::function::repository { 'pabelanger-unstable':
-        components  => 'main',
-        key         => '6E14C2BE',
-        url         => 'ppa.kickstand-project.org/pabelanger/unstable/ubuntu',
-    }
+  apt::function::repository { 'pabelanger-unstable':
+    components  => 'main',
+    key         => '6E14C2BE',
+    url         => 'ppa.kickstand-project.org/pabelanger/unstable/ubuntu',
+  }
 }
 
 class astricon12::asterisk::install {
-    package { 'asterisk-config-astricon2012':
-        ensure => latest,
-    }
+  package { 'asterisk-config-astricon2012':
+    ensure => latest,
+  }
 }
 
 class astricon12::asterisk::phones {
-    asterisk::function::sip::device::polycom::601 { '0004f230d181':
-        email       => 'paul.belanger@polybeacon.com',
-        extension   => '3001',
-        fullname    => 'Paul Belanger',
-        secret      => 'zuteV5vEd7US',
-    }
+  asterisk::function::sip::device::polycom::601 { '0004f230d181':
+    email       => 'paul.belanger@polybeacon.com',
+    extension   => '3001',
+    fullname    => 'Paul Belanger',
+    secret      => 'zuteV5vEd7US',
+  }
 
-    dhcp::function::host { '0004f230d181':
-        address => '00:04:f2:30:d1:81',
-        options => $dhcp_options,
-    }
+  dhcp::function::host { '0004f230d181':
+    address => '00:04:f2:30:d1:81',
+    options => $dhcp_options,
+  }
 
-    asterisk::function::sip::device::polycom::601 { '0004f23aca66':
-        email       => 'russell@russellbryant.net',
-        extension   => '3002',
-        fullname    => 'Russell Bryant',
-        secret      => 'jaP7aCrAdr57',
-    }
+  asterisk::function::sip::device::polycom::601 { '0004f23aca66':
+    email       => 'russell@russellbryant.net',
+    extension   => '3002',
+    fullname    => 'Russell Bryant',
+    secret      => 'jaP7aCrAdr57',
+  }
 
-    dhcp::function::host { '0004f23aca66':
-        address => '00:04:f2:3a:ca:66',
-        options => $dhcp_options,
-    }
+  dhcp::function::host { '0004f23aca66':
+    address => '00:04:f2:3a:ca:66',
+    options => $dhcp_options,
+  }
 
-    asterisk::function::sip::device::polycom::601 { '0004f239f062':
-        email       => 'leif@leifmadsen.com',
-        extension   => '3003',
-        fullname    => 'Leif Madsen',
-        secret      => 'BeT7ahaKeWuc',
-    }
+  asterisk::function::sip::device::polycom::601 { '0004f239f062':
+    email       => 'leif@leifmadsen.com',
+    extension   => '3003',
+    fullname    => 'Leif Madsen',
+    secret      => 'BeT7ahaKeWuc',
+  }
 
-    dhcp::function::host { '0004f239f062':
-        address => '00:04:f2:39:f0:62',
-        options => $dhcp_options,
-    }
+  dhcp::function::host { '0004f239f062':
+    address => '00:04:f2:39:f0:62',
+    options => $dhcp_options,
+  }
 }
 
-# vim:sw=4:ts=4:expandtab:textwidth=79
+# vim:sw=2:ts=2:expandtab:textwidth=79
