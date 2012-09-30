@@ -19,12 +19,6 @@ class astricon12::asterisk(
     $environment = 'production'
 ) {
     $asterisk_sip = {}
-    $network_auto = ['eth0']
-    $network_interfaces = {
-        'eth0' => {
-            'method'    => 'dhcp',
-        }
-    }
     $polycom-provision_password = 'superSecret!'
     $puppet_server = 'puppet-01-test.polybeacon.lan'
     $ssh_options = {}
@@ -53,10 +47,7 @@ class astricon12::asterisk(
         interfaces  => $dhcp_interfaces,
     }
 
-    class { 'network::client':
-        auto        => $network_auto,
-        interfaces  => $network_interfaces,
-    }
+    class { 'network::client': }
 
     class { 'ssh::server':
         options => $ssh_options,
