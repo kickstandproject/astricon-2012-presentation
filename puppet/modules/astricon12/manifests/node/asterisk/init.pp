@@ -15,7 +15,7 @@
 # of the GNU General Public License Version 2. See the LICENSE
 # file at the top of the source tree.
 #
-class astricon12::asterisk(
+class astricon12::node::asterisk::init(
   $environment = 'production'
 ) {
   $polycom-provision_password = 'superSecret!'
@@ -42,9 +42,9 @@ class astricon12::asterisk(
     puppet_server   => $puppet_server,
   }
 
-  class { 'astricon12::asterisk::bootstrap': }
-  class { 'astricon12::asterisk::install' : }
-  class { 'astricon12::asterisk::phones': }
+  class { 'astricon12::node::asterisk::bootstrap': }
+  class { 'astricon12::node::asterisk::install' : }
+  class { 'astricon12::node::asterisk::phones': }
   class { 'asterisk::server': }
 
   class { 'network::client':
@@ -76,51 +76,6 @@ class astricon12::asterisk(
 
   polycom-provision::function::sip-basic { $name:
     address => $::fqdn,
-  }
-}
-
-class astricon12::asterisk::bootstrap(
-  $stage = 'bootstrap'
-) {
-  apt::function::repository { 'asterisk-1.8-unstable':
-    components  => 'main',
-    key         => '6E14C2BE',
-    url         => 'ppa.kickstand-project.org/asterisk-1.8/unstable/ubuntu',
-  }
-
-  apt::function::repository { 'pabelanger-unstable':
-    components  => 'main',
-    key         => '6E14C2BE',
-    url         => 'ppa.kickstand-project.org/pabelanger/unstable/ubuntu',
-  }
-}
-
-class astricon12::asterisk::install {
-  package { 'asterisk-config-astricon2012':
-    ensure => latest,
-  }
-}
-
-class astricon12::asterisk::phones {
-  asterisk::function::sip::device::polycom::601 { '0004f230d181':
-    email       => 'paul.belanger@polybeacon.com',
-    extension   => '3001',
-    fullname    => 'Paul Belanger',
-    secret      => 'zuteV5vEd7US',
-  }
-
-  asterisk::function::sip::device::polycom::601 { '0004f23aca66':
-    email       => 'russell@russellbryant.net',
-    extension   => '3002',
-    fullname    => 'Russell Bryant',
-    secret      => 'jaP7aCrAdr57',
-  }
-
-  asterisk::function::sip::device::polycom::601 { '0004f239f062':
-    email       => 'leif@leifmadsen.com',
-    extension   => '3003',
-    fullname    => 'Leif Madsen',
-    secret      => 'BeT7ahaKeWuc',
   }
 }
 
