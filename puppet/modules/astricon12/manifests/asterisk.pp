@@ -32,7 +32,7 @@ class astricon12::asterisk(
       'network'         => '192.168.55.0',
       'broadcast'       => '192.168.55.254',
       'gateway'         => '192.168.55.1',
-      'dns-nameservers' => '8.8.8.8',
+      'dns-nameservers' => '192.168.55.1',
       'dns-search'      => 'astricon.lan',
     },
   }
