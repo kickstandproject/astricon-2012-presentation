@@ -15,15 +15,22 @@
 # of the GNU General Public License Version 2. See the LICENSE
 # file at the top of the source tree.
 #
-class astricon12::general(
+class astricon12::init(
   $environment    = 'production',
   $puppet_server  = 'puppet-01-prod.polybeacon.com'
 ) {
-  $timezone_zoneinfo = 'America/Toronto'
-
   class { 'apt::client': }
   class { 'ntp::server': }
+  class { 'ssh::server': }
+  class { 'sudoers::client': }
   class { 'timezone::client': }
+
+  class { 'puppet::client':
+    options => {
+      'environment' => $environment,
+      'server'      => $puppet_server,
+    }
+  }
 }
 
 # vim:sw=2:ts=2:expandtab:textwidth=79

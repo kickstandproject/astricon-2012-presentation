@@ -24,7 +24,7 @@ class astricon12::asterisk(
     'tftp-server-name' => '"pbx-astricon12-test"',
   }
 
-  class { 'astricon12::general':
+  class { 'astricon12::init':
     environment     => $environment,
     puppet_server   => $puppet_server,
   }
@@ -32,9 +32,6 @@ class astricon12::asterisk(
   class { 'astricon12::asterisk::bootstrap': }
   class { 'astricon12::asterisk::install' : }
   class { 'astricon12::asterisk::phones': }
-  class { 'network::client': }
-  class { 'ssh::server': }
-  class { 'rsyslog::server': }
   class { 'asterisk::server': }
 
   class { 'polycom-provision::server':
