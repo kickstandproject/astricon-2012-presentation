@@ -56,7 +56,20 @@ class astricon12::asterisk(
   }
 
   class { 'dhcp::server':
-    interfaces  => $dhcp_interfaces,
+    interfaces  => 'eth0',
+  }
+
+  dhcp::function::subnet { $name:
+    subnet  => '192.168.55.0',
+    range   => '192.168.55.100 192.168.55.254',
+    options => {
+      'domain-name-servers'   => '192.168.55.1',
+      'domain-name'           => '"astricon.lan"',
+      'routers'               => '192.168.55.1',
+      'ntp-servers'           => '192.168.55.1',
+      'time-offset'           => '-25200',
+      'tftp-server-name'      => "\"http://ksp-polycom:${polycom-provision_password}@pbx-astricon12-prod.astricon.lan/polycom\"",
+    }
   }
 
   polycom-provision::function::site { $name: }
