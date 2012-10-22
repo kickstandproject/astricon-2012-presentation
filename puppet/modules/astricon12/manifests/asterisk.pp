@@ -67,7 +67,7 @@ class astricon12::asterisk(
       'domain-name'           => '"astricon.lan"',
       'routers'               => '192.168.55.1',
       'ntp-servers'           => '192.168.55.2',
-      'time-offset'           => '-25200',
+      'time-offset'           => '-18000',
       'tftp-server-name'      => "\"http://ksp-polycom:${polycom-provision_password}@pbx-astricon12-prod.astricon.lan/polycom\"",
     }
   }
