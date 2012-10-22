@@ -24,6 +24,19 @@ class astricon12::asterisk(
     'tftp-server-name' => '"pbx-astricon12-test"',
   }
 
+  $network_interfaces = {
+    'eth0' => {
+      'method'          => 'static',
+      'address'         => '192.168.55.2',
+      'netmask'         => '255.255.255.0',
+      'network'         => '192.168.55.0',
+      'broadcast'       => '192.168.55.254',
+      'gateway'         => '192.168.55.1',
+      'dns-nameservers' => '8.8.8.8',
+      'dns-search'      => 'astricon.lan',
+    },
+  }
+
   class { 'astricon12::init':
     environment     => $environment,
     puppet_server   => $puppet_server,
@@ -33,6 +46,10 @@ class astricon12::asterisk(
   class { 'astricon12::asterisk::install' : }
   class { 'astricon12::asterisk::phones': }
   class { 'asterisk::server': }
+
+  class { 'network::client':
+    interfaces  => $network_interfaces,
+  }
 
   class { 'polycom-provision::server':
     password  => $polycom-provision_password,
